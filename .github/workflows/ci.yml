@@ -80,8 +80,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
-        cache-dependency-path: './frontend/pnpm-lock.yaml'
         check-latest: true
     
     - name: Habilitar Corepack (pnpm)
