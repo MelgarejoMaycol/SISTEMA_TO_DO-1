@@ -107,9 +107,15 @@ CORS_ALLOWED_ORIGINS = _env_list(
         'http://localhost:3000',
         'http://127.0.0.1:3000',
         'https://api-proyecto-mzbi.onrender.com',
+        'https://to-do-topaz-sigma.vercel.app',
     ],
 )
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGIN_REGEXES = _env_list(
+    'CORS_ALLOWED_ORIGIN_REGEXES',
+    [r'^https://(?:.+\.)?vercel\.app$'],
+)
 
 CSRF_TRUSTED_ORIGINS = _env_list(
     'CSRF_TRUSTED_ORIGINS',
