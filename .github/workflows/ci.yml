@@ -82,9 +82,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
         cache-dependency-path: './frontend/pnpm-lock.yaml'
+        check-latest: true
     
     - name: Habilitar Corepack (pnpm)
       run: corepack enable
+
+    - name: Verificar versión de pnpm
+      run: pnpm --version
 
     - name: Instalar dependencias del frontend
       working-directory: ./frontend
