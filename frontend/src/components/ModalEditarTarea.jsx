@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaEliminada }) {
+  const fieldIds = {
+    titulo: "editar-tarea-titulo",
+    descripcion: "editar-tarea-descripcion",
+    categoria: "editar-tarea-categoria",
+    estado: "editar-tarea-estado",
+    fechaEntrega: "editar-tarea-fecha-entrega",
+    repeticion: "editar-tarea-repeticion",
+  };
+
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
@@ -55,6 +64,7 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
             <button
               onClick={onClose}
               className="text-slate-400 hover:text-slate-600 transition-colors"
+              aria-label="Cerrar modal de edición"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -65,7 +75,7 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label htmlFor={fieldIds.titulo} className="block text-sm font-semibold text-slate-700 mb-2">
               Título
             </label>
             <input
@@ -73,19 +83,21 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
               name="titulo"
               value={formData.titulo}
               onChange={handleChange}
+              id={fieldIds.titulo}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label htmlFor={fieldIds.descripcion} className="block text-sm font-semibold text-slate-700 mb-2">
               Descripción
             </label>
             <textarea
               name="descripcion"
               value={formData.descripcion}
               onChange={handleChange}
+              id={fieldIds.descripcion}
               rows="3"
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent resize-none"
             />
@@ -93,13 +105,14 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor={fieldIds.categoria} className="block text-sm font-semibold text-slate-700 mb-2">
                 Categoría
               </label>
               <select
                 name="categoria"
                 value={formData.categoria}
                 onChange={handleChange}
+                id={fieldIds.categoria}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
               >
                 <option value="trabajo">Trabajo</option>
@@ -109,13 +122,14 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor={fieldIds.estado} className="block text-sm font-semibold text-slate-700 mb-2">
                 Estado
               </label>
               <select
                 name="estado"
                 value={formData.estado}
                 onChange={handleChange}
+                id={fieldIds.estado}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
               >
                 <option value="pendiente">Pendiente</option>
@@ -127,7 +141,7 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor={fieldIds.fechaEntrega} className="block text-sm font-semibold text-slate-700 mb-2">
                 Fecha de Entrega
               </label>
               <input
@@ -135,18 +149,20 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
                 name="fecha_entrega"
                 value={formData.fecha_entrega}
                 onChange={handleChange}
+                id={fieldIds.fechaEntrega}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor={fieldIds.repeticion} className="block text-sm font-semibold text-slate-700 mb-2">
                 Repetición
               </label>
               <select
                 name="repeticion"
                 value={formData.repeticion}
                 onChange={handleChange}
+                id={fieldIds.repeticion}
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
               >
                 <option value="ninguna">Ninguna</option>

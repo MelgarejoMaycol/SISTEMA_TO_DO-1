@@ -31,7 +31,7 @@ describe('ModalCrearTarea Component', () => {
       />
     );
     
-    expect(screen.getByText(/crear nueva tarea/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /nueva tarea/i })).toBeInTheDocument();
   });
 
   test('el formulario tiene valores iniciales vacíos', () => {

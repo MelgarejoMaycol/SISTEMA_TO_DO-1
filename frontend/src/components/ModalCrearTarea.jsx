@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 
 function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
+  const fieldIds = {
+    titulo: "crear-tarea-titulo",
+    descripcion: "crear-tarea-descripcion",
+    categoria: "crear-tarea-categoria",
+    fechaEntrega: "crear-tarea-fecha-entrega",
+    repeticion: "crear-tarea-repeticion",
+    intervaloRepeticion: "crear-tarea-intervalo",
+    fechaFinRepeticion: "crear-tarea-fecha-fin",
+  };
+
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
@@ -93,6 +103,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             <button
               onClick={onClose}
               className="text-slate-400 hover:text-slate-600 transition-colors"
+              aria-label="Cerrar modal de creación de tarea"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -108,7 +119,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-slate-700 font-semibold mb-2 text-sm">
+              <label htmlFor={fieldIds.titulo} className="block text-slate-700 font-semibold mb-2 text-sm">
                 Título *
               </label>
               <input
@@ -116,6 +127,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                 name="titulo"
                 value={formData.titulo}
                 onChange={handleChange}
+                id={fieldIds.titulo}
                 required
                 className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                 placeholder="Ej: Completar informe mensual"
@@ -123,13 +135,14 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             </div>
 
             <div>
-              <label className="block text-slate-700 font-semibold mb-2 text-sm">
+              <label htmlFor={fieldIds.descripcion} className="block text-slate-700 font-semibold mb-2 text-sm">
                 Descripción
               </label>
               <textarea
                 name="descripcion"
                 value={formData.descripcion}
                 onChange={handleChange}
+                id={fieldIds.descripcion}
                 rows="3"
                 className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all resize-none"
                 placeholder="Describe los detalles de la tarea..."
@@ -137,13 +150,14 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             </div>
 
             <div>
-              <label className="block text-slate-700 font-semibold mb-2 text-sm">
+              <label htmlFor={fieldIds.categoria} className="block text-slate-700 font-semibold mb-2 text-sm">
                 Categoría *
               </label>
               <select
                 name="categoria"
                 value={formData.categoria}
                 onChange={handleChange}
+                id={fieldIds.categoria}
                 required
                 className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
               >
@@ -154,7 +168,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             </div>
 
             <div>
-              <label className="block text-slate-700 font-semibold mb-2 text-sm">
+              <label htmlFor={fieldIds.fechaEntrega} className="block text-slate-700 font-semibold mb-2 text-sm">
                 {esRecurrente ? (
                   <span className="flex items-center gap-2">
                     Fecha de inicio *
@@ -169,6 +183,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                 name="fecha_entrega"
                 value={formData.fecha_entrega}
                 onChange={handleChange}
+                id={fieldIds.fechaEntrega}
                 required={esRecurrente}
                 className={`w-full border-2 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all ${
                   esRecurrente && !formData.fecha_entrega 
@@ -185,7 +200,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             </div>
 
             <div>
-              <label className="block text-slate-700 font-semibold mb-2 text-sm flex items-center gap-2">
+              <label htmlFor={fieldIds.repeticion} className="block text-slate-700 font-semibold mb-2 text-sm flex items-center gap-2">
                 <span className="text-lg">🔄</span>
                 Repetir tarea
               </label>
@@ -193,6 +208,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                 name="repeticion"
                 value={formData.repeticion}
                 onChange={handleChange}
+                id={fieldIds.repeticion}
                 className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
               >
                 <option value="ninguna">No repetir</option>
@@ -215,7 +231,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
 
                 {formData.repeticion === "personalizada" && (
                   <div>
-                    <label className="block text-slate-700 font-semibold mb-2 text-sm">
+                    <label htmlFor={fieldIds.intervaloRepeticion} className="block text-slate-700 font-semibold mb-2 text-sm">
                       Repetir cada (días)
                     </label>
                     <input
@@ -223,6 +239,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                       name="intervalo_repeticion"
                       value={formData.intervalo_repeticion}
                       onChange={handleChange}
+                      id={fieldIds.intervaloRepeticion}
                       min="1"
                       max="365"
                       className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
@@ -231,7 +248,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                 )}
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-2 text-sm">
+                  <label htmlFor={fieldIds.fechaFinRepeticion} className="block text-slate-700 font-semibold mb-2 text-sm">
                     Terminar repetición (opcional)
                   </label>
                   <input
@@ -239,6 +256,7 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                     name="fecha_fin_repeticion"
                     value={formData.fecha_fin_repeticion}
                     onChange={handleChange}
+                    id={fieldIds.fechaFinRepeticion}
                     min={formData.fecha_entrega}
                     className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                   />

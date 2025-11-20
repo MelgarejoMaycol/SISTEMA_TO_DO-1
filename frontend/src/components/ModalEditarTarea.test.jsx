@@ -185,14 +185,9 @@ describe('ModalEditarTarea Component', () => {
         onTareaEliminada={mockOnTareaEliminada}
       />
     );
-    
-    const closeButton = screen.getByRole('button', { name: /close/i }) || 
-                       document.querySelector('[aria-label="close"]') ||
-                       document.querySelector('button svg').closest('button');
-    
-    if (closeButton) {
-      fireEvent.click(closeButton);
-      expect(mockOnClose).toHaveBeenCalled();
-    }
+
+    const closeButton = screen.getByLabelText(/cerrar modal de edición/i);
+    fireEvent.click(closeButton);
+    expect(mockOnClose).toHaveBeenCalled();
   });
 });

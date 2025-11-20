@@ -92,7 +92,7 @@ jobs:
     
     - name: Ejecutar pruebas
       working-directory: ./frontend
-      run: pnpm test -- --coverage --watchAll=false
+      run: pnpm test --coverage --watchAll=false
       env:
         CI: true
     
