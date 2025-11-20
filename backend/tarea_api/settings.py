@@ -90,16 +90,24 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'postgres'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'Fernando041611'),
-        'HOST': os.getenv('DB_HOST', 'nuevastecnologias.csbqgcma6jn2.us-east-1.rds.amazonaws.com'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+if _env_bool('USE_SQLITE_FOR_TESTS') or os.getenv('GITHUB_ACTIONS') or os.getenv('CI'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'postgres'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'Fernando041611'),
+            'HOST': os.getenv('DB_HOST', 'nuevastecnologias.csbqgcma6jn2.us-east-1.rds.amazonaws.com'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
+    }
 
 CORS_ALLOWED_ORIGINS = _env_list(
     'CORS_ALLOWED_ORIGINS',
