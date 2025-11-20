@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllUsuarios, getAllTareas, getAdminEstadisticas } from "../../services/api";
+import { getAllUsuarios, getAllTareas } from "../../services/api";
 
 function AdminDashboard() {
   const navigate = useNavigate();

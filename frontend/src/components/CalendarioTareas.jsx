@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { getTareasCalendario } from "../services/api";
 
 function CalendarioTareas({ tareas, loading, onTareaClick, onInstanciaClick }) {
@@ -63,7 +63,7 @@ function CalendarioTareas({ tareas, loading, onTareaClick, onInstanciaClick }) {
   }, [mesActual]);
 
   // Obtener días del mes
-  const obtenerDiasDelMes = () => {
+  const obtenerDiasDelMes = useCallback(() => {
     const año = mesActual.getFullYear();
     const mes = mesActual.getMonth();
     const primerDia = new Date(año, mes, 1);
@@ -84,7 +84,7 @@ function CalendarioTareas({ tareas, loading, onTareaClick, onInstanciaClick }) {
     }
     
     return dias;
-  };
+      }, [mesActual]);
 
   // Obtener tareas e instancias para una fecha específica
   const obtenerTareasParaDia = (fecha) => {
@@ -152,7 +152,7 @@ function CalendarioTareas({ tareas, loading, onTareaClick, onInstanciaClick }) {
     }
   };
 
-  const dias = useMemo(() => obtenerDiasDelMes(), [mesActual]);
+  const dias = useMemo(() => obtenerDiasDelMes(), [obtenerDiasDelMes]);
 
   if (loading || loadingInstancias) {
     return (
