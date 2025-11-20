@@ -87,6 +87,9 @@ jobs:
     - name: Habilitar Corepack (pnpm)
       run: corepack enable
 
+    - name: Preparar pnpm
+      run: corepack prepare pnpm@latest --activate
+
     - name: Verificar versión de pnpm
       run: pnpm --version
 
