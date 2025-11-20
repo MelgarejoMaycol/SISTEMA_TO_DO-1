@@ -153,7 +153,7 @@ jobs:
     
     - name: Test docker-compose configuration
       run: |
-        docker-compose config
+        docker compose config
 
   # Job para análisis de seguridad (opcional)
   security-scan:
