@@ -1,5 +1,17 @@
 // localStorage Mock API - Para desarrollo y despliegue sin backend
 
+// Clase de error personalizada compatible con axios
+class AxiosError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.response = {
+      status,
+      data: { detail: message }
+    };
+    this.name = "AxiosError";
+  }
+}
+
 // Usuario de prueba
 const DEMO_USER = {
   id: 1,
@@ -34,12 +46,7 @@ export const mockRegisterUser = async (payload) => {
   
   // Verificar si el email ya existe
   if (mockData.users.some(u => u.email === payload.email)) {
-    throw {
-      response: {
-        status: 400,
-        data: { detail: "El email ya está registrado" }
-      }
-    };
+    throw new AxiosError(400, "El email ya está registrado");
   }
 
   const newUser = {
@@ -75,12 +82,7 @@ export const mockLoginUser = async (payload) => {
   );
 
   if (!user) {
-    throw {
-      response: {
-        status: 401,
-        data: { detail: "Credenciales inválidas" }
-      }
-    };
+    throw new AxiosError(401, "Credenciales inválidas");
   }
 
   return {
@@ -143,12 +145,7 @@ export const mockUpdateTarea = async (tareaId, tareaData, accessToken) => {
 
   const index = mockData.tareas?.findIndex(t => t.id_tarea === tareaId);
   if (index === -1 || index === undefined) {
-    throw {
-      response: {
-        status: 404,
-        data: { detail: "Tarea no encontrada" }
-      }
-    };
+    throw new AxiosError(404, "Tarea no encontrada");
   }
 
   mockData.tareas[index] = { ...mockData.tareas[index], ...tareaData };
@@ -164,12 +161,7 @@ export const mockDeleteTarea = async (tareaId, accessToken) => {
 
   const index = mockData.tareas?.findIndex(t => t.id_tarea === tareaId);
   if (index === -1 || index === undefined) {
-    throw {
-      response: {
-        status: 404,
-        data: { detail: "Tarea no encontrada" }
-      }
-    };
+    throw new AxiosError(404, "Tarea no encontrada");
   }
 
   mockData.tareas.splice(index, 1);
@@ -224,12 +216,7 @@ export const mockMarkTareaCompleted = async (tareaId, accessToken) => {
 
   const tarea = mockData.tareas?.find(t => t.id_tarea === tareaId);
   if (!tarea) {
-    throw {
-      response: {
-        status: 404,
-        data: { detail: "Tarea no encontrada" }
-      }
-    };
+    throw new AxiosError(404, "Tarea no encontrada");
   }
 
   tarea.estado = "completada";
