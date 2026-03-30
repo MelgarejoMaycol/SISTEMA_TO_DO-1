@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
-//h
+
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [useMock, setUseMock] = useState(false);
   const navigate = useNavigate();
+
+  // Detectar si está en modo mock
+  useEffect(() => {
+    const isMock = process.env.REACT_APP_USE_MOCK === "true";
+    setUseMock(isMock);
+  }, []);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // Llenar credenciales de prueba
+  const fillDemoCredentials = () => {
+    setFormData({
+      email: "prueba@example.com",
+      password: "prueba12345678",
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,6 +97,20 @@ function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {useMock && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-sm text-blue-700">
+              <strong>📌 Modo Demo (localStorage)</strong>
+              <p className="text-xs mt-1">Usa las credenciales de prueba o crea una nueva cuenta.</p>
+              <button
+                type="button"
+                onClick={fillDemoCredentials}
+                className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg py-2 transition-all"
+              >
+                🔑 Llenar Credenciales de Prueba
+              </button>
+            </div>
+          )}
+
           <div>
             <label className="block text-slate-700 font-semibold mb-2 text-sm">
               Correo electrónico
