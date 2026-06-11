@@ -4,11 +4,14 @@ FROM node:18-alpine
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar package.json y package-lock.json
-COPY package*.json ./
+# Instalar pnpm usado por el proyecto
+RUN npm install --global pnpm@10.21.0
+
+# Copiar manifiestos de dependencias
+COPY package.json pnpm-lock.yaml ./
 
 # Instalar dependencias
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Copiar el resto de la aplicación
 COPY . .
