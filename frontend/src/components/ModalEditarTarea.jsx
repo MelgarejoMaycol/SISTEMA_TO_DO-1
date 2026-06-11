@@ -7,7 +7,6 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
     categoria: "editar-tarea-categoria",
     estado: "editar-tarea-estado",
     fechaEntrega: "editar-tarea-fecha-entrega",
-    repeticion: "editar-tarea-repeticion",
   };
 
   const [formData, setFormData] = useState({
@@ -16,7 +15,7 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
     categoria: "personal",
     estado: "pendiente",
     fecha_entrega: "",
-    repeticion: "ninguna"
+    repeticion: "ninguna",
   });
 
   useEffect(() => {
@@ -27,22 +26,25 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
         categoria: tarea.categoria || "personal",
         estado: tarea.estado || "pendiente",
         fecha_entrega: tarea.fecha_entrega || "",
-        repeticion: tarea.repeticion || "ninguna"
+        repeticion: "ninguna",
       });
     }
   }, [tarea]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onTareaEditada(tarea.id_tarea, formData);
+    await onTareaEditada(tarea.id_tarea, {
+      ...formData,
+      repeticion: "ninguna",
+    });
     onClose();
   };
 
@@ -139,38 +141,18 @@ function ModalEditarTarea({ isOpen, onClose, tarea, onTareaEditada, onTareaElimi
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor={fieldIds.fechaEntrega} className="block text-sm font-semibold text-slate-700 mb-2">
-                Fecha de Entrega
-              </label>
-              <input
-                type="date"
-                name="fecha_entrega"
-                value={formData.fecha_entrega}
-                onChange={handleChange}
-                id={fieldIds.fechaEntrega}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-              />
-            </div>
-
-            <div>
-              <label htmlFor={fieldIds.repeticion} className="block text-sm font-semibold text-slate-700 mb-2">
-                Repetición
-              </label>
-              <select
-                name="repeticion"
-                value={formData.repeticion}
-                onChange={handleChange}
-                id={fieldIds.repeticion}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-              >
-                <option value="ninguna">Ninguna</option>
-                <option value="semanal">Semanal</option>
-                <option value="mensual">Mensual</option>
-                <option value="anual">Anual</option>
-              </select>
-            </div>
+          <div>
+            <label htmlFor={fieldIds.fechaEntrega} className="block text-sm font-semibold text-slate-700 mb-2">
+              Fecha de Entrega
+            </label>
+            <input
+              type="date"
+              name="fecha_entrega"
+              value={formData.fecha_entrega}
+              onChange={handleChange}
+              id={fieldIds.fechaEntrega}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+            />
           </div>
 
           <div className="flex gap-3 pt-4">

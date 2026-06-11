@@ -33,9 +33,6 @@ class TareaSerializer(serializers.ModelSerializer):
 	def validate(self, attrs):
 		datos = super().validate(attrs)
 
-		if not self.instance:
-			datos['estado'] = 'pendiente'
-
 		repeticion = datos.get('repeticion') or (self.instance.repeticion if self.instance else 'ninguna')
 
 		if repeticion != 'ninguna':

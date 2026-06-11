@@ -99,12 +99,13 @@ class TareaAPITestCase(APITestCase):
             'titulo': 'Nueva tarea API',
             'descripcion': 'Descripción de la tarea',
             'categoria': 'trabajo',
-            'estado': 'pendiente'
+            'estado': 'completada'
         }
         response = self.client.post('/api/tareas/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Tarea.objects.count(), 1)
         self.assertEqual(Tarea.objects.get().titulo, 'Nueva tarea API')
+        self.assertEqual(Tarea.objects.get().estado, 'completada')
 
     def test_actualizar_tarea(self):
         """Test para verificar que se puede actualizar una tarea"""

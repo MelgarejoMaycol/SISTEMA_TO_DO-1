@@ -25,9 +25,9 @@ function Dashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [tareaSeleccionada, setTareaSeleccionada] = useState(null);
 
-  const cargarDatos = async () => {
+  const cargarDatos = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) setLoading(true);
       const [statsData, tareasData, instanciasHoyData] = await Promise.all([
         getTareasEstadisticas(token),
         getTareas(token),
@@ -40,7 +40,7 @@ function Dashboard() {
     } catch (error) {
       console.error("Error al cargar datos:", error);
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
   };
 
@@ -67,8 +67,23 @@ function Dashboard() {
   };
 
   const handleCrearTarea = async (formData) => {
-    await createTarea(formData, token);
-    await cargarDatos(); // Recargar las tareas y estadísticas
+    const tareaCreada = await createTarea(formData, token);
+    const nuevaTarea = {
+      ...formData,
+      ...tareaCreada,
+      estado: tareaCreada.estado || formData.estado || 'pendiente',
+      repeticion: tareaCreada.repeticion || 'ninguna',
+    };
+
+    setTareas((prev) => [...prev, nuevaTarea]);
+    setEstadisticas((prev) => ({
+      ...prev,
+      total: (prev.total || 0) + 1,
+      pendientes: nuevaTarea.estado === 'pendiente' ? (prev.pendientes || 0) + 1 : prev.pendientes,
+      en_proceso: nuevaTarea.estado === 'en_proceso' ? (prev.en_proceso || 0) + 1 : prev.en_proceso,
+      completadas: nuevaTarea.estado === 'completada' ? (prev.completadas || 0) + 1 : prev.completadas,
+    }));
+    cargarDatos(false);
   };
 
   const handleEditarTarea = async (idTarea, formData) => {

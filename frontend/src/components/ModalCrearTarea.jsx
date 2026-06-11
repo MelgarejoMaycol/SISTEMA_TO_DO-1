@@ -5,37 +5,26 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
     titulo: "crear-tarea-titulo",
     descripcion: "crear-tarea-descripcion",
     categoria: "crear-tarea-categoria",
+    estado: "crear-tarea-estado",
     fechaEntrega: "crear-tarea-fecha-entrega",
-    repeticion: "crear-tarea-repeticion",
-    intervaloRepeticion: "crear-tarea-intervalo",
-    fechaFinRepeticion: "crear-tarea-fecha-fin",
   };
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     titulo: "",
     descripcion: "",
     categoria: "trabajo",
+    estado: "pendiente",
     fecha_entrega: "",
     repeticion: "ninguna",
-    intervalo_repeticion: 1,
-    fecha_fin_repeticion: "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    
-    // Si cambia la repetición a "ninguna", limpiar campos de recurrencia
-    if (name === "repeticion" && value === "ninguna") {
-      setFormData(prev => ({
-        ...prev,
-        repeticion: "ninguna",
-        intervalo_repeticion: 1,
-        fecha_fin_repeticion: "",
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -44,42 +33,15 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
     setLoading(true);
 
     try {
-      // Preparar datos para enviar
-      const dataToSend = { ...formData };
-      
-      // Si no es recurrente, no enviar campos de recurrencia
-      if (formData.repeticion === "ninguna") {
-        delete dataToSend.intervalo_repeticion;
-        delete dataToSend.fecha_fin_repeticion;
-      } else {
-        // Validar que tenga fecha de entrega si es recurrente
-        if (!formData.fecha_entrega) {
-          setError("⚠️ Las tareas recurrentes requieren una fecha de inicio. Por favor, selecciona una fecha.");
-          setLoading(false);
-          return;
-        }
-        
-        // Validar intervalo para personalizada
-        if (formData.repeticion === "personalizada" && formData.intervalo_repeticion < 1) {
-          setError("⚠️ El intervalo de repetición debe ser al menos 1 día.");
-          setLoading(false);
-          return;
-        }
-      }
-      
-      console.log("Enviando datos:", dataToSend); // Para debug
-      
-      await onTareaCreada(dataToSend);
-      // Resetear formulario
-      setFormData({
-        titulo: "",
-        descripcion: "",
-        categoria: "trabajo",
-        fecha_entrega: "",
+      const dataToSend = {
+        ...formData,
         repeticion: "ninguna",
-        intervalo_repeticion: 1,
-        fecha_fin_repeticion: "",
-      });
+      };
+
+      console.log("Enviando datos:", dataToSend);
+
+      await onTareaCreada(dataToSend);
+      setFormData(initialFormData);
       onClose();
     } catch (err) {
       console.error("Error detallado:", err);
@@ -91,8 +53,6 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
   };
 
   if (!isOpen) return null;
-
-  const esRecurrente = formData.repeticion !== "ninguna";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -168,15 +128,26 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
             </div>
 
             <div>
+              <label htmlFor={fieldIds.estado} className="block text-slate-700 font-semibold mb-2 text-sm">
+                Estado *
+              </label>
+              <select
+                name="estado"
+                value={formData.estado}
+                onChange={handleChange}
+                id={fieldIds.estado}
+                required
+                className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
+              >
+                <option value="pendiente">Pendiente</option>
+                <option value="en_proceso">En Proceso</option>
+                <option value="completada">Completada</option>
+              </select>
+            </div>
+
+            <div>
               <label htmlFor={fieldIds.fechaEntrega} className="block text-slate-700 font-semibold mb-2 text-sm">
-                {esRecurrente ? (
-                  <span className="flex items-center gap-2">
-                    Fecha de inicio *
-                    <span className="text-xs text-red-600 font-normal">(obligatoria para tareas recurrentes)</span>
-                  </span>
-                ) : (
-                  "Fecha de entrega"
-                )}
+                Fecha de entrega
               </label>
               <input
                 type="date"
@@ -184,88 +155,9 @@ function ModalCrearTarea({ isOpen, onClose, onTareaCreada }) {
                 value={formData.fecha_entrega}
                 onChange={handleChange}
                 id={fieldIds.fechaEntrega}
-                required={esRecurrente}
-                className={`w-full border-2 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all ${
-                  esRecurrente && !formData.fecha_entrega 
-                    ? 'border-red-300 bg-red-50' 
-                    : 'border-slate-200'
-                }`}
-                placeholder={esRecurrente ? "Selecciona fecha de inicio" : ""}
-              />
-              {esRecurrente && !formData.fecha_entrega && (
-                <p className="text-xs text-red-600 mt-1">
-                  ⚠️ Debes seleccionar una fecha de inicio para crear una tarea recurrente
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor={fieldIds.repeticion} className="block text-slate-700 font-semibold mb-2 text-sm flex items-center gap-2">
-                <span className="text-lg">🔄</span>
-                Repetir tarea
-              </label>
-              <select
-                name="repeticion"
-                value={formData.repeticion}
-                onChange={handleChange}
-                id={fieldIds.repeticion}
                 className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
-              >
-                <option value="ninguna">No repetir</option>
-                <option value="diaria">Cada día</option>
-                <option value="semanal">Cada semana</option>
-                <option value="mensual">Cada mes</option>
-                <option value="personalizada">Personalizada</option>
-              </select>
+              />
             </div>
-
-            {/* Campos adicionales para tareas recurrentes */}
-            {esRecurrente && (
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 space-y-4 animate-fadeIn">
-                <div className="flex items-center gap-2 text-blue-700 font-semibold text-sm mb-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Configuración de recurrencia</span>
-                </div>
-
-                {formData.repeticion === "personalizada" && (
-                  <div>
-                    <label htmlFor={fieldIds.intervaloRepeticion} className="block text-slate-700 font-semibold mb-2 text-sm">
-                      Repetir cada (días)
-                    </label>
-                    <input
-                      type="number"
-                      name="intervalo_repeticion"
-                      value={formData.intervalo_repeticion}
-                      onChange={handleChange}
-                      id={fieldIds.intervaloRepeticion}
-                      min="1"
-                      max="365"
-                      className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label htmlFor={fieldIds.fechaFinRepeticion} className="block text-slate-700 font-semibold mb-2 text-sm">
-                    Terminar repetición (opcional)
-                  </label>
-                  <input
-                    type="date"
-                    name="fecha_fin_repeticion"
-                    value={formData.fecha_fin_repeticion}
-                    onChange={handleChange}
-                    id={fieldIds.fechaFinRepeticion}
-                    min={formData.fecha_entrega}
-                    className="w-full border-2 border-slate-200 rounded-xl px-4 py-3 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">
-                    Dejar en blanco para que se repita indefinidamente
-                  </p>
-                </div>
-              </div>
-            )}
 
             <div className="flex gap-3 pt-4">
               <button
