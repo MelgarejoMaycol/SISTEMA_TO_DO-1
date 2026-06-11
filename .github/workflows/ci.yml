@@ -81,12 +81,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         check-latest: true
+        cache: 'pnpm'
+        cache-dependency-path: frontend/pnpm-lock.yaml
     
-    - name: Habilitar Corepack (pnpm)
-      run: corepack enable
-
-    - name: Preparar pnpm
-      run: corepack prepare pnpm@latest --activate
+    - name: Instalar pnpm
+      run: npm install --global pnpm@10.21.0
 
     - name: Verificar versión de pnpm
       run: pnpm --version
